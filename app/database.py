@@ -5,4 +5,5 @@ from sqlalchemy.orm import sessionmaker
 DATABASE_URL = "mysql+mysqlconnector://root:Route7#@localhost/invoice_db"
 
 engine = create_engine(DATABASE_URL)
-session = sessionmaker()
+session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
