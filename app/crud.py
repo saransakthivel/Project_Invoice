@@ -10,3 +10,6 @@ def create_invoice(db:session, invoice:schemas.InvoiceCreate):
 
 def get_invoice(db:session,skip:int=0,limit:int=10):
     return db.query(models.Invoice).offset(skip).limit(limit).all()
+
+def get_invoice_by_id(db:session, id:int):
+    return db.query(models.Invoice).filter(models.Invoice.id == id).first()

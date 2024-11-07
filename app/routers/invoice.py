@@ -21,3 +21,7 @@ def create_invoice(invoice:schemas.InvoiceCreate, db:Session = Depends(get_db)):
 def read_invoice(skip: int=0, limit: int=10, db: Session = Depends(get_db)):
     invoices = crud.get_invoice(db=db, skip=skip, limit=limit)
     return invoices
+
+@router.get("/invoices/{id}")
+def get_invoice(id: int, db:Session=Depends(get_db)):
+    return crud.get_invoice_by_id(db=db, id=id)
