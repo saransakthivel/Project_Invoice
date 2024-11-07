@@ -2,7 +2,7 @@ from sqlalchemy.orm import session
 from . import models, schemas
 
 def create_invoice(db:session, invoice:schemas.InvoiceCreate):
-    db_invoice = models.Invoice(**invoice.model_dump)
+    db_invoice = models.Invoice(**invoice.model_dump())
     db.add(db_invoice)
     db.commit()
     db.refresh(db_invoice)

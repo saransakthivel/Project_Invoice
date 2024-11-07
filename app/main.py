@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-
+from .routers import invoice
 
 app = FastAPI()
 
-@app.get('/')
-def index():
-    return {'msg': 'Hello this is home page'}
+app.include_router(invoice.router)
