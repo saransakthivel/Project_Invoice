@@ -40,6 +40,10 @@ def update_invoice(invoice_id: int, invoice_update: InvoiceUpdate, db: Session =
     for key, value in update_data.items():
         setattr(db_invoice, key, value)
 
+    db.commit()
+    db.refresh(db_invoice)
+    return db_invoice
+
 @router.delete("/invoices/{id}", response_model=dict)
 def delete_invoice(id: int, db: Session = Depends(get_db)):
     db_invoice=db.query(InvoiceModel).filter(InvoiceModel.id == id).first()
