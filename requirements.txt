@@ -1,9 +1,0 @@
-uvicorn
-fastapi
-jinja2
-sqlalchemy
-pydantic
-mysql-connector-python
-bcrypt
-python-jose
-weasyprint
