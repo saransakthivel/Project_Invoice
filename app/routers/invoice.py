@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
 from .. import schemas, crud
+from ..models import Invoice as InvoiceModel
+from ..schemas import InvoiceUpdate
 
 
 router = APIRouter()
@@ -25,3 +27,21 @@ def read_invoice(skip: int=0, limit: int=10, db: Session = Depends(get_db)):
 @router.get("/invoices/{id}")
 def get_invoice(id: int, db:Session=Depends(get_db)):
     return crud.get_invoice_by_id(db=db, id=id)
+
+@router.put("/invoices/{invoice_id}", response_model=schemas.InvoiceUpdate)
+def update_invoice(invoice_id: int, invoice_update: InvoiceUpdate, db: Session = Depends(get_db)):
+    db_invoice = db.query(InvoiceModel).filter(InvoiceModel.id == invoice_id).first()
+
+    if db_invoice is None:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    
+    update_data = invoice_update.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(db_invoice, key, value)
+
+
+    db.commit()
+    db.refresh(db_invoice)
+
+    return db_invoice
