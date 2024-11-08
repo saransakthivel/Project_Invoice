@@ -40,8 +40,14 @@ def update_invoice(invoice_id: int, invoice_update: InvoiceUpdate, db: Session =
     for key, value in update_data.items():
         setattr(db_invoice, key, value)
 
+@router.delete("/invoices/{id}", response_model=dict)
+def delete_invoice(id: int, db: Session = Depends(get_db)):
+    db_invoice=db.query(InvoiceModel).filter(InvoiceModel.id == id).first()
 
+    if db_invoice is None:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+
+    db.delete(db_invoice)
     db.commit()
-    db.refresh(db_invoice)
-
-    return db_invoice
+    
+    return {'msg': 'Invoice Deleted Succesfully'}
